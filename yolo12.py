@@ -88,19 +88,29 @@ while True:
             cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
             cv2.putText(frame, label + " " + str(round(confidence, 2)), (x, y + 30), font, 3, color, 3)
 	        #if int(x) < int(width/2):
-		     #   cv2.putText(frame,"turn right",(10,10),font,3,color,3)		
-            print(x,y,x+w,y+h)
+		    #   cv2.putText(frame,"turn right",(10,10),font,3,color,3)
+        print(boxes[0])		
     for i in range(len(boxes)):
         if i in indexes:
             x, y, w, h = boxes[i]
             if int(height-100) > y + h > int(height-250):  
+                if int(width/2)-120 < x < int(width/2)+120 and int(width/2)-120 < x + w <int(width/2)-120:
+                    cv2.putText(frame,"stop",(300,40),font,3,color,3)
                 if int(width/2)-120 < x + w < int(width/2)+120:
+                    clear_bounding_box(x+w+50,y+h,x+w+50+260)
+                    cv2.line(frame,(int(width/2)-140,height-50),(x+w+50,y+h),(0,0,255),2)
+                    cv2.line(frame,(int(width/2)+140,height-50),(x+w+50+260,y+h),(0,0,255),2)
                     cv2.putText(frame,"turn right",(300,40),font,3,color,3)
                 if int(width/2)-120 < x < int(width/2)+120:
+                    clear_bounding_box(x-50,y+h,x-50-260)
+                    cv2.line(frame,(int(width/2)-140,height-50),(x-50-260,y+h),(0,0,255),2)
+                    cv2.line(frame,(int(width/2)+140,height-50),(x-50,y+h),(0,0,255),2)
                     cv2.putText(frame,"turn left",(300,40),font,3,color,3)
-                elif int(width/2)-120 < x < int(width/2)+120 and int(width/2)-120 < x + w <int(width/2)-120:
-                    cv2.putText(frame,"stop",(300,40),font,3,color,3)
-             
+                
+    def clear_bounding_box(x,y,width):
+        cv2.line((frame),(x,y),(width,y),(0,0,255),2)
+        
+        return None
     elapsed_time = time.time() - starting_time
     fps = frame_id / elapsed_time
     cv2.putText(frame, "FPS: " + str(round(fps, 2)), (10, 50), font, 4, (0, 0, 0), 3)
